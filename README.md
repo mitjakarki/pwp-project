@@ -1,5 +1,5 @@
-# PWP SPRING 2020
-# PROJECT NAME
+# PWP SPRING 2021
+# speedrunning
 # Group information
 * Student 1. Mitja Kärki mitja.karki ät hotmail dot com
 * Student 2. Name and email
