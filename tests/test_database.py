@@ -33,6 +33,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.close()
 
 def _get_user():
+    """Creates a dummy User instance"""
     return User(
         first_name="user",
         last_name="test",
@@ -42,17 +43,20 @@ def _get_user():
     )
     
 def _get_Country():
+    """Creates a dummy Country instance"""
     return Country(
         country="Finland",
         currency="EUR"
     )
     
 def _get_Area():
+    """Creates a dummy Area instance"""
     return Area(
         name="Oulu - Keskusta"
     )
     
 def _get_Event():
+    """Creates a dummy Event instance"""
     return Event(
         name="Stand Up Comedy at 45 Special",
         max_tickets=150,
@@ -61,12 +65,14 @@ def _get_Event():
         event_begin=datetime.datetime.now() + datetime.timedelta(days = 1)
     )
 def _get_Reservation():
+    """Creates a dummy Reservation instance"""
     return Reservation(
         paid=True,
         created_at=datetime.datetime.now()
     )
     
 def _get_Ticket():
+    """Creates a dummy Ticket instance"""
     return Ticket(
         type="VIP"
     )
@@ -141,14 +147,20 @@ def test_user_ondelete_country(db_handle):
     Tests that users's nationality foreign key is set to null when the country
     is deleted.
     """
-    
+    # Create instances
     user = _get_user()
     country = _get_Country()
+    
+    # Create relations
     user.country = country
+    
+    # Add to database and then delete the relation instance
     db_handle.session.add(user)
     db_handle.session.commit()
     db_handle.session.delete(country)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert user.nationality is None
     
 def test_area_ondelete_country(db_handle):
@@ -156,14 +168,19 @@ def test_area_ondelete_country(db_handle):
     Tests that row of the area is deleted when the country
     is deleted.
     """
-    
+    # Create instances
     area = _get_Area()
     country = _get_Country()
+    
+    # Create relations
     area.in_country = country
+    # Add to database and then delete the relation instance
     db_handle.session.add(area)
     db_handle.session.commit()
     db_handle.session.delete(country)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert Area.query.count() == 0
     
 def test_event_ondelete_manager(db_handle):
@@ -171,32 +188,50 @@ def test_event_ondelete_manager(db_handle):
     Tests that the manager is null when the manager
     is deleted.
     """
-    
+    # Create instances
     user = _get_user()
     event = _get_Event()
+    
+    # Create relations
     event.is_managed_by = user
+    
+    # Add to database
     db_handle.session.add(event)
     db_handle.session.commit()
+    
+    # See if the relation was correct
     assert event.event_manager == user.id
+    
+    # delete the relation instance
     db_handle.session.delete(user)
     db_handle.session.commit()
+    # See if the ondelete function works as designed
     assert event.event_manager is None
 def test_event_ondelete_area(db_handle):
     """
     Tests that the in_area is null when the area
     is deleted.
     """
-    
+    # Create instances
     area = _get_Area()
     country = _get_Country()
     event = _get_Event()
+    # Create relations
     event.in_area = area
     area.in_country = country
+    
+    # Add to database
     db_handle.session.add(area)
     db_handle.session.commit()
+    
+    # See if the relation was correct
     assert event.area_name == area.name
+    
+    # delete the relation instance
     db_handle.session.delete(area)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert event.area_name is None
 
 def test_reservation_ondelete_user(db_handle):
@@ -204,22 +239,26 @@ def test_reservation_ondelete_user(db_handle):
     Tests that row of the reservation is deleted when the user
     is deleted.
     """
-    
+    # Create instances
     reservation = _get_Reservation()
     area = _get_Area()
     country = _get_Country()
     event = _get_Event()
     user = _get_user()
     
+    # Create relations
     area.in_country = country
     event.in_area = area
     reservation.for_event = event
     reservation.user_booked = user
     
+    # Add to database and then delete the relation instance
     db_handle.session.add(reservation)
     db_handle.session.commit()
     db_handle.session.delete(user)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert Reservation.query.count() == 0
     
 def test_reservation_ondelete_event(db_handle):
@@ -228,21 +267,26 @@ def test_reservation_ondelete_event(db_handle):
     is deleted.
     """
     
+    # Create instances
     reservation = _get_Reservation()
     area = _get_Area()
     country = _get_Country()
     event = _get_Event()
     user = _get_user()
     
+    # Create relations
     area.in_country = country
     event.in_area = area
     reservation.for_event = event
     reservation.user_booked = user
     
+    # Add to database and then delete the relation instance
     db_handle.session.add(reservation)
     db_handle.session.commit()
     db_handle.session.delete(event)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert Reservation.query.count() == 0
     
 def test_ticket_ondelete_reservation(db_handle):
@@ -251,6 +295,7 @@ def test_ticket_ondelete_reservation(db_handle):
     is deleted.
     """
     
+    # Create instances
     reservation = _get_Reservation()
     area = _get_Area()
     country = _get_Country()
@@ -258,14 +303,18 @@ def test_ticket_ondelete_reservation(db_handle):
     user = _get_user()
     ticket = _get_Ticket()
     
+    # Create relations
     area.in_country = country
     event.in_area = area
     reservation.for_event = event
     reservation.user_booked = user
     ticket.in_reservation = reservation
     
+    # Add to database and then delete the relation instance
     db_handle.session.add(ticket)
     db_handle.session.commit()
     db_handle.session.delete(reservation)
     db_handle.session.commit()
+    
+    # See if the ondelete function works as designed
     assert Ticket.query.count() == 0
