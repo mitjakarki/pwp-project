@@ -10,7 +10,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
     first_name = db.Column(db.String(32), nullable=False)
     last_name = db.Column(db.String(32), nullable=False)
-    time = db.Column(db.Date, nullable=False)
+    birth_date = db.Column(db.Date, nullable=False)
     email = db.Column(db.String(64), nullable=False, unique=True)
     nationality = db.Column(db.String(32), db.ForeignKey("country.country" , ondelete="SET NULL"), nullable=True)
     

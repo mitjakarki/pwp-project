@@ -36,7 +36,7 @@ def _get_user():
     return User(
         first_name="user",
         last_name="test",
-        time=datetime.datetime.now(),
+        birth_date=datetime.datetime.now(),
         email="user.test@gmail.com"
         
     )
@@ -71,7 +71,7 @@ def _get_Ticket():
         type="VIP"
     )
     
-def test_create_country_user(db_handle):
+def test_create_instances(db_handle):
     """
     Tests that we can create one instance of each model and save them to the
     database using valid values for all columns. After creation, test that 
@@ -168,15 +168,104 @@ def test_area_ondelete_country(db_handle):
     
 def test_event_ondelete_manager(db_handle):
     """
-    Tests that row of the area is deleted when the country
+    Tests that the manager is null when the manager
+    is deleted.
+    """
+    
+    user = _get_user()
+    event = _get_Event()
+    event.is_managed_by = user
+    db_handle.session.add(event)
+    db_handle.session.commit()
+    assert event.event_manager == user.id
+    db_handle.session.delete(user)
+    db_handle.session.commit()
+    assert event.event_manager is None
+def test_event_ondelete_area(db_handle):
+    """
+    Tests that the in_area is null when the area
     is deleted.
     """
     
     area = _get_Area()
     country = _get_Country()
+    event = _get_Event()
+    event.in_area = area
     area.in_country = country
     db_handle.session.add(area)
     db_handle.session.commit()
-    db_handle.session.delete(country)
+    assert event.area_name == area.name
+    db_handle.session.delete(area)
     db_handle.session.commit()
-    assert Area.query.count() == 0
+    assert event.area_name is None
+
+def test_reservation_ondelete_user(db_handle):
+    """
+    Tests that row of the reservation is deleted when the user
+    is deleted.
+    """
+    
+    reservation = _get_Reservation()
+    area = _get_Area()
+    country = _get_Country()
+    event = _get_Event()
+    user = _get_user()
+    
+    area.in_country = country
+    event.in_area = area
+    reservation.for_event = event
+    reservation.user_booked = user
+    
+    db_handle.session.add(reservation)
+    db_handle.session.commit()
+    db_handle.session.delete(user)
+    db_handle.session.commit()
+    assert Reservation.query.count() == 0
+    
+def test_reservation_ondelete_event(db_handle):
+    """
+    Tests that row of the reservation is deleted when the event
+    is deleted.
+    """
+    
+    reservation = _get_Reservation()
+    area = _get_Area()
+    country = _get_Country()
+    event = _get_Event()
+    user = _get_user()
+    
+    area.in_country = country
+    event.in_area = area
+    reservation.for_event = event
+    reservation.user_booked = user
+    
+    db_handle.session.add(reservation)
+    db_handle.session.commit()
+    db_handle.session.delete(event)
+    db_handle.session.commit()
+    assert Reservation.query.count() == 0
+    
+def test_ticket_ondelete_reservation(db_handle):
+    """
+    Tests that row of the ticket is deleted when the reservation
+    is deleted.
+    """
+    
+    reservation = _get_Reservation()
+    area = _get_Area()
+    country = _get_Country()
+    event = _get_Event()
+    user = _get_user()
+    ticket = _get_Ticket()
+    
+    area.in_country = country
+    event.in_area = area
+    reservation.for_event = event
+    reservation.user_booked = user
+    ticket.in_reservation = reservation
+    
+    db_handle.session.add(ticket)
+    db_handle.session.commit()
+    db_handle.session.delete(reservation)
+    db_handle.session.commit()
+    assert Ticket.query.count() == 0
