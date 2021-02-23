@@ -1,5 +1,22 @@
 # PWP SPRING 2021
-# speedrunning
+# Nearby Events booking
+
+#Package requirements
+The required packages to be installed are found in the requirements.txt
+
+# Setting the environment before running
+You must set the correct environment variables before running:
+set FLASK_APP=bookingapi
+set FLASK_ENV=development
+
+With linux change "set" to "export"
+# How to initialize and populate test data to database
+When running first time, the database must be initialized with:
+flask initializeDatabase
+
+It is possible to populate the database with test data:
+flask generateTestDatabase
+
 # Group information
 * Student 1. Mitja Kärki mitja.karki ät hotmail dot com
 * Student 2. Antti Keränen anttikeranen ät hotmail dot com
