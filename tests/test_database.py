@@ -7,20 +7,11 @@ from flask_sqlalchemy import SQLAlchemy
 o_path = os.getcwd()
 sys.path.append(o_path)
 
-#from nearbyEvents import db
 import nearbyEvents.models
 from nearbyEvents import app
-#from nearbyEvents import db
 from nearbyEvents.models import User, Event, Area, Country, Reservation, Ticket
 import datetime
-#db = SQLAlchemy()
-#This code is based on https://flask.palletsprojects.com/en/1.0.x/testing/
-#config = {
-##        "SQLALCHEMY_DATABASE_URI": "sqlite:///" + db_fname,
-#        "TESTING": True,
-#        "SQLALCHEMY_TRACK_MODIFICATIONS": False
-#    }
-#app = nearbyEvents.create_app(config)
+
 @pytest.fixture
 def db_handle():
     db_fd, db_fname = tempfile.mkstemp()
@@ -31,22 +22,6 @@ def db_handle():
     }
     global app
     app = nearbyEvents.create_app(config)
-    #config = {
-    #    "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db",
-    #    "TESTING": True,
-    #    "SQLALCHEMY_TRACK_MODIFICATIONS": False
-    #}
-    #app = nearbyEvents.create_app(config)
-    #nearbyEvents.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_fname
-    #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_fname
-    #nearbyEvents.app.config["TESTING"] = True
-    #nearbyEvents.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    #app.db.init_app(app)
-    #nearbyEvents.db.init_app(nearbyEvents.app)
-    #db = SQLAlchemy(app)
-    #db.create_all()
-    #initializeDatabase()
-    #db.init_app(app)
     from nearbyEvents.models import User, Event, Area, Country, Reservation, Ticket
     with app.app_context():
         nearbyEvents.models.db.init_app(app)
