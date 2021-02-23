@@ -3,6 +3,7 @@
 
 # Package requirements
 The required packages to be installed are found in the requirements.txt
+We are using all the recommended tools and packages that are also provided in the exercises.
 
 # Setting the environment before running
 You must set the correct environment variables before running:
