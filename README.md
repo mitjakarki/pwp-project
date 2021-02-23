@@ -1,7 +1,7 @@
 # PWP SPRING 2021
 # Nearby Events booking
 
-#Package requirements
+# Package requirements
 The required packages to be installed are found in the requirements.txt
 
 # Setting the environment before running
