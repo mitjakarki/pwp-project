@@ -7,7 +7,7 @@ The required packages to be installed are found in the requirements.txt
 # Setting the environment before running
 You must set the correct environment variables before running:
 
-    set FLASK_APP=nearbyEvent
+    set FLASK_APP=nearbyEvents
 
     set FLASK_ENV=development
 
