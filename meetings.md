@@ -1,15 +1,29 @@
 # Meetings notes
 
 ## Meeting 1.
-* **DATE:**
+* **DATE: 1.3.2021**
 * **ASSISTANTS:**
 
 ### Minutes
-*Summary of what was discussed during the meeting*
+*Simplify*
 
 ### Action points
 *List here the actions points discussed with assistants*
+remove api descriptions (only for selling to customers)
 
+Choose either find nearby events or selling tickets or both
+
+simplify "available tickets  are connected..."
+
+add descriptions of all the db concepts, countries, areas...
+
+add another client that is not ticket usage
+
+specify more on related apis. why they are rest? are they not hypermedia?
+
+mention that Area.name primarykey and unique
+
+onModifies for everything and foreignKey errors
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
