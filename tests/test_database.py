@@ -4,6 +4,7 @@ import pytest
 import tempfile
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 o_path = os.getcwd()
 sys.path.append(o_path)
 
@@ -334,3 +335,131 @@ def test_ticket_ondelete_reservation(db_handle):
         
         # See if the ondelete function works as designed
         assert Ticket.query.count() == 0
+        
+def test_IntegrityError_for_models(db_handle):
+    """
+    Tests integrityError for all classes.
+    """
+    with app.app_context():
+        ticket_1 = _get_Ticket()
+        ticket_2 = _get_Ticket()
+        db_handle.session.add(ticket_1)
+        db_handle.session.add(ticket_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+            
+        db_handle.session.rollback()
+        event_1 = _get_Event()
+        event_2 = _get_Event()
+        db_handle.session.add(event_1)
+        db_handle.session.add(event_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+            
+        db_handle.session.rollback()
+        area_1 = _get_Area()
+        area_2 = _get_Area()
+        db_handle.session.add(area_1)
+        db_handle.session.add(area_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+
+        db_handle.session.rollback()
+        user_1 = _get_user()
+        user_2 = _get_user()
+        db_handle.session.add(user_1)
+        db_handle.session.add(user_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+            
+        db_handle.session.rollback()
+        country_1 = _get_Country()
+        country_2 = _get_Country()
+        db_handle.session.add(country_1)
+        db_handle.session.add(country_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+            
+        db_handle.session.rollback()
+        reservation_1 = _get_Reservation()
+        reservation_2 = _get_Reservation()
+        db_handle.session.add(reservation_1)
+        db_handle.session.add(reservation_2)  
+        with pytest.raises(IntegrityError):
+            db_handle.session.commit()
+
+def test_ticket_foreignkey_reservation(db_handle):
+    """
+    Tests foreignkey value for reservation and ticket
+    """
+    with app.app_context():
+        user = _get_user()
+        event = _get_Event()
+        reservation = _get_Reservation()
+        reservation.for_event = event
+        reservation.user_booked = user
+        ticket = _get_Ticket()
+        ticket.in_reservation = reservation
+
+        db_handle.session.add(ticket)
+        db_handle.session.commit()
+        assert Reservation.query.count() == 1
+        assert Ticket.query.count() == 1
+        db_reservation = Reservation.query.first()
+        db_ticket = Ticket.query.first()
+        assert db_ticket.in_reservation == db_reservation
+        assert db_ticket in db_reservation.tickets
+
+def test_ticket_onmodify_area(db_handle):
+    """
+    Tests event.area_name change that is changing also the area.name.
+    """
+    with app.app_context():
+        # Create instances
+        reservation = _get_Reservation()
+        area = _get_Area()
+        country = _get_Country()
+        event = _get_Event()
+        user = _get_user()
+        ticket = _get_Ticket()
+        
+        # Create relations
+        area.in_country = country
+        event.in_area = area
+        reservation.for_event = event
+        reservation.user_booked = user
+        ticket.in_reservation = reservation
+        
+        # Add to database and then modify
+        db_handle.session.add(ticket)
+        db_handle.session.commit()
+        
+        # Check Addings
+        db_event = Event.query.first()
+        db_area = Area.query.first()
+        assert Ticket.query.count() == 1
+        assert Area.query.count() == 1
+        assert db_event.in_area == db_area
+        assert db_event in db_area.events
+
+        
+        #Different Area
+        area_new = Area(
+        name="Helsinki - Vuosaari"
+        )
+        # Set new area name
+        db_area = Area.query.first()
+        db_area.name = area_new.name
+        db_handle.session.commit()
+
+        # See if the value is modified
+        assert Ticket.query.count() == 1
+        assert Area.query.count() == 1
+        assert Event.query.count() == 1
+        db_area = Area.query.first()
+        db_ticket = Ticket.query.first()
+        db_event_updated = Event.query.first()
+        assert db_event_updated.in_area.name == area_new.name
+        assert db_event_updated in area.events
+        assert db_area.name == db_event_updated.in_area.name
+        assert db_area.name == area_new.name
