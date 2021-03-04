@@ -430,36 +430,130 @@ def test_ticket_onmodify_area(db_handle):
         reservation.user_booked = user
         ticket.in_reservation = reservation
         
-        # Add to database and then modify
+        # Add to database
         db_handle.session.add(ticket)
         db_handle.session.commit()
         
         # Check Addings
         db_event = Event.query.first()
         db_area = Area.query.first()
+        db_reservation = Reservation.query.first()
         assert Ticket.query.count() == 1
         assert Area.query.count() == 1
+        assert Reservation.query.count() == 1
         assert db_event.in_area == db_area
         assert db_event in db_area.events
+        assert db_reservation in db_ticket.in_reservation
 
         
         #Different Area
         area_new = Area(
         name="Helsinki - Vuosaari"
         )
-        # Set new area name
+        country_new = _get_Country()
+        country_new.country = "Spain"
+        # Set new area name and country
         db_area = Area.query.first()
+        db_country = Country.query.first()
         db_area.name = area_new.name
+        db_country.country = country_new.country
         db_handle.session.commit()
 
         # See if the value is modified
         assert Ticket.query.count() == 1
         assert Area.query.count() == 1
         assert Event.query.count() == 1
+        assert Country.query.count() == 1
         db_area = Area.query.first()
         db_ticket = Ticket.query.first()
         db_event_updated = Event.query.first()
+        db_country_updated = Country.query.first()
         assert db_event_updated.in_area.name == area_new.name
         assert db_event_updated in area.events
         assert db_area.name == db_event_updated.in_area.name
         assert db_area.name == area_new.name
+        assert db_area.in_country == db_country_updated.country
+        
+def test_ticket_onmodify_area(db_handle):
+    """
+    Tests event.area_name change that is changing also the area.name.
+    """
+    with app.app_context():
+        # Create instances
+        reservation = _get_Reservation()
+        area = _get_Area()
+        country = _get_Country()
+        event = _get_Event()
+        event_2 = _get_Event()
+        event_2.name = "Fifty shades of gray in Valkea"
+        user = _get_user()
+        user_2 = _get_user()
+        user_2.first_name = "Pekka"
+        user_2.last_name = "Pouta"
+        user_2.email = "pekkispouta@gmail.com"
+        ticket = _get_Ticket()
+        
+        # Create relations
+        area.in_country = country
+        event.in_area = area
+        event.is_managed_by = user
+        db_handle.session.add(event)
+        db_handle.session.add(event_2)
+        db_handle.session.commit()
+        
+
+        reservation.for_event = event
+        reservation.user_id = user_2.id
+        reservation.user_booked = user_2
+        ticket.in_reservation = reservation
+        
+        # Add to database
+
+        db_handle.session.add(ticket)
+        db_handle.session.commit()
+        
+        # Check Addings
+        db_event = Event.query.first()
+        db_area = Area.query.first()
+        db_user = User.query.first()
+        db_user_2 = User.query.filter_by(id=2).first()
+        db_reservation = Reservation.query.first()
+        userid = db_user.id
+        assert Event.query.count() == 2
+        assert Area.query.count() == 1
+        assert User.query.count() == 2
+        assert Reservation.query.count() == 1
+        assert db_event.in_area == db_area
+        assert db_event in db_area.events
+        assert userid == db_event.event_manager
+        assert db_user_2 == db_reservation.user_booked
+
+        
+        # Different user
+        new_user = _get_user()
+        new_user.first_name="Matti"
+        new_user.last_name="Makulainen"
+        
+        # Set new user to manage event1
+        db_user = User.query.first()
+        db_user.first_name = new_user.first_name
+        db_user.last_name = new_user.last_name
+        
+        # modify reservation for user_2
+        db_reservation = Reservation.query.first()
+        db_reservation.event_id = 2
+        db_handle.session.commit()
+
+        # See if the value is modified
+        assert User.query.count() == 2
+        assert Event.query.count() == 2
+        assert Reservation.query.count() == 1
+        db_user_updated = User.query.filter_by(first_name="Matti").first()
+        db_user_2 = User.query.filter_by(first_name="Pekka").first()
+        db_event = Event.query.first()
+        db_event_2 = Event.query.filter_by(id=2).first()
+        db_reservation = Reservation.query.first()
+        assert db_event.event_manager == db_user_updated.id
+        assert db_user_updated == db_event.is_managed_by
+        assert db_reservation.user_booked == db_user_2
+        assert db_reservation.for_event == db_event_2
