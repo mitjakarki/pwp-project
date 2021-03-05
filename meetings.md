@@ -21,7 +21,7 @@
 
 #### specify more on related apis. why they are rest? are they not hypermedia?
 
-#### mention that Area.name primarykey and unique
+#### mention that Area.name primarykey and unique. DONE
 
 #### onModifies for everything and foreignKey errors
 
