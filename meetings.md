@@ -36,7 +36,18 @@
 *Summary of what was discussed during the meeting*
 
 ### Action points
-*List here the actions points discussed with assistants*
+#### APIARY:
+#### Move some things in apiary or make clear what is profile what is what?
+#### add areas control
+#### fix mason headers to content types.
+#### 204 header do we need location header?
+#### add "get area" to apiary
+#### remove add-area and edit from eventbyarea apiary to area collection and area.
+
+#### REST CONFORMANCE:
+#### develop further the uniform interface part
+#### also connectedness explain more on HATEOAS, for example how we use hypermedia.
+
 
 
 ### Comments from staff
