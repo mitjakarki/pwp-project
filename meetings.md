@@ -23,7 +23,7 @@
 
 #### mention that Area.name primarykey and unique. DONE
 
-#### onModifies for everything and foreignKey errors
+#### onModifies for everything and foreignKey errors DONE
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
