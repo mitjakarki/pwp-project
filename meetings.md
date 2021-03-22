@@ -9,17 +9,17 @@
 
 ### Action points
 *List here the actions points discussed with assistants*
-#### remove api descriptions (only for selling to customers)
+#### remove api descriptions (only for selling to customers) DONE
 
 #### Choose either find nearby events or selling tickets or both
 
-#### simplify "available tickets  are connected..."
+#### simplify "available tickets  are connected..." DONE
 
-#### add descriptions of all the db concepts, countries, areas...
+#### add descriptions of all the db concepts, countries, areas... DONE
 
-#### add another client that is not ticket usage
+#### add another client that is not ticket usage DONE
 
-#### specify more on related apis. why they are rest? are they not hypermedia?
+#### specify more on related apis. why they are rest? are they not hypermedia? DONE
 
 #### mention that Area.name primarykey and unique. DONE
 
