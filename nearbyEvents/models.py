@@ -38,10 +38,24 @@ class Event(db.Model):
 class Area(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
     name = db.Column(db.String(64), nullable=False, unique=True)
-    country = db.Column(db.String(32), db.ForeignKey("country.country", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
+    country = db.Column(db.String(32), db.ForeignKey("country.country", ondelete="CASCADE", onupdate="CASCADE"), nullable=False, default="Finland")
     
     events = db.relationship("Event", back_populates="in_area")
     in_country = db.relationship("Country", back_populates="areas")
+    
+    @staticmethod
+    def get_schema():
+        schema = {
+            "type": "object",
+            "required": ["name"]
+        }
+        props = schema["properties"] = {}
+        props["name"] = {
+            "description": "Area name",
+            "type": "string"
+        }
+        return schema
+
     
 class Country(db.Model):
     country = db.Column(db.String(32), primary_key=True)    

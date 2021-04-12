@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from nearbyEvents.constants import *
 
 db = SQLAlchemy()
 app = None
@@ -27,12 +28,26 @@ def create_app(test_config=None):
     db.init_app(app)
     
     from . import models
+    from . import api
     app.cli.add_command(models.initializeDatabase)
     app.cli.add_command(models.generateTestDatabase)
+    app.register_blueprint(api.api_bp)
     
+    @app.route(LINK_RELATIONS_URL)
+    def send_link_relations():
+        return "link relations"
+        
+    @app.route("/profiles/<profile>/")
+    def send_profile(profile):
+        return "you requests {} profile".format(profile)
+        
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+        
+    @app.route("/admin/")
+    def admin_site():
+        return app.send_static_file("html/admin.html")
         
     return app
 
