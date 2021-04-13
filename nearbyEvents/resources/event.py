@@ -8,45 +8,45 @@ from nearbyEvents import db
 from nearbyEvents.utils import NearbyEventsBuilder, create_error_response
 from nearbyEvents.constants import *
 
-class AreaItem(Resource):
+class EventItem(Resource):
 
-    def get(self, area):
-        db_area = Area.query.filter_by(name=area).first()
+    def get(self, event):
+        db_area = Event.query.filter_by(name=event).first()
         if db_area is None:
             return create_error_response(404, "Not found", 
-                "No area was found with the name {}".format(area)
+                "No event was found with the name {}".format(event)
             )
         
         body = NearbyEventsBuilder(
-            name=db_area.name
+            name=db_event.name
         )
         body.add_namespace("nearby", LINK_RELATIONS_URL)
-        body.add_control("self", url_for("api.areaitem", area=area))
-        body.add_control("profile", AREA_PROFILE)
-        body.add_control("collection", url_for("api.areacollection"))
-        body.add_control_delete_area(area)
-        # body.add_control("nearby:areas-collection",
-            # url_for("api.areacollection")
+        body.add_control("self", url_for("api.eventitem", event=event))
+        body.add_control("profile", EVENT_PROFILE)
+        body.add_control("collection", url_for("api.eventcollection"))
+        body.add_control_delete_event(event)
+        # body.add_control("nearby:events-collection",
+            # url_for("api.eventcollection")
         # )
         
         return Response(json.dumps(body), 200, mimetype=MASON)
 
 
-class AreaCollection(Resource):
+class EventCollection(Resource):
 
     def get(self):
         body = NearbyEventsBuilder()
 
         body.add_namespace("nearby", LINK_RELATIONS_URL)
-        body.add_control("self", url_for("api.areacollection"))
-        body.add_control_add_area()
+        body.add_control("self", url_for("api.eventcollection"))
+        body.add_control_add_event()
         body["items"] = []
-        for db_area in Area.query.all():
+        for db_event in Event.query.all():
             item = NearbyEventsBuilder(
-                name=db_area.name
+                name=db_event.name
             )
-            item.add_control("self", url_for("api.areaitem", area=db_area.name))
-            item.add_control("profile", AREA_PROFILE)
+            item.add_control("self", url_for("api.eventitem", event=db_event.name))
+            item.add_control("profile", EVENT_PROFILE)
             body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)
@@ -59,23 +59,26 @@ class AreaCollection(Resource):
             )
 
         try:
-            validate(request.json, Area.get_schema())
+            validate(request.json, Event.get_schema())
         except ValidationError as e:
             return create_error_response(400, "Invalid JSON document", str(e))
 
-        area = Area(
+        event = Event(
             name=request.json["name"]
+            status=request.json["status"],
+            event_begin=request.json["event_begin"],
+            area_name=request.json["area_name"]
         )
 
         try:
-            db.session.add(area)
+            db.session.add(event)
             db.session.commit()
         except IntegrityError:
             return create_error_response(
                 409, "Already exists",
-                "Area with name '{}' already exists.".format(request.json["name"])
+                "Event with name '{}' already exists.".format(request.json["name"])
             )
 
         return Response(status=201, headers={
-            "Location": url_for("api.areaitem", area=request.json["name"])
+            "Location": url_for("api.eventitem", event=request.json["name"])
         })
