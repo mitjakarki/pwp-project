@@ -11,8 +11,8 @@ from nearbyEvents.constants import *
 class EventItem(Resource):
 
     def get(self, event):
-        db_area = Event.query.filter_by(name=event).first()
-        if db_area is None:
+        db_event = Event.query.filter_by(name=event).first()
+        if db_event is None:
             return create_error_response(404, "Not found", 
                 "No event was found with the name {}".format(event)
             )
@@ -24,7 +24,7 @@ class EventItem(Resource):
         body.add_control("self", url_for("api.eventitem", event=event))
         body.add_control("profile", EVENT_PROFILE)
         body.add_control("collection", url_for("api.eventcollection"))
-        body.add_control_delete_event(event)
+        #body.add_control_delete_event(event)
         # body.add_control("nearby:events-collection",
             # url_for("api.eventcollection")
         # )

@@ -94,16 +94,25 @@ class NearbyEventsBuilder(MasonBuilder):
             title="Add a new event",
             schema=Event.get_schema()
         )
+        
+    def add_control_events_by(self, area):
+        self.add_control(
+            "nearby:events-by",
+            url_for("api.eventsbyarea", area=area),
+            method="GET",
+            title="Add a new event",
+            schema=Event.get_schema()
+        )
 
-    # def add_control_modify_sensor(self, sensor):
-        # self.add_control(
-            # "edit",
-            # url_for("api.sensoritem", sensor=sensor),
-            # method="PUT",
-            # encoding="json",
-            # title="Edit this sensor",
-            # schema=Sensor.get_schema()
-        # )
+    def add_control_modify_area(self, area):
+        self.add_control(
+            "nearby:edit-area",
+            url_for("api.areaitem", area=area),
+            method="PUT",
+            encoding="json",
+            title="Edit this area",
+            schema=Area.get_schema()
+        )
 
     def add_control_get_areas(self, area):
         base_uri = url_for("api.areacollection", area=area)

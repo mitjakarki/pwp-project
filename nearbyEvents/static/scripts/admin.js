@@ -97,7 +97,7 @@ function renderAreaCollectionForm(ctrl) {
     form.attr("action", ctrl.href);
     form.attr("method", ctrl.method);
     form.submit(submitArea);
-    form.append("<label>" + name.description + "</label>");
+    form.append("<label>" + ctrl.title + "</label>");
     form.append("<input type='text' name='name'>");
     ctrl.schema.required.forEach(function (property) {
         $("input[name='" + property + "']").attr("required", true);
@@ -109,21 +109,26 @@ function renderAreaCollectionForm(ctrl) {
 function renderAreaForm(ctrl) {
     let button = $("<button>");
     let name = ctrl.title;
-	button.html("Delete");
+	button.html("Delete area");
 	button.attr("onClick", "deleteData('"+ctrl.href+"', '"+ctrl.method+"', getDeletedArea)")
-    $("div.form").html(button);
+    //$("div.form").html(button);
+	$(".resulttable tbody").append(button);
 }
 
 function renderArea(body) {
     $("div.navigation").html(
         "<a href='" +
         body["@controls"].collection.href +
-        "' onClick='followLink(event, this, renderAreas)'>Areas</a>" 
+        "' onClick='followLink(event, this, renderAreas)'>Areas</a>" +
+		" | " + "<a href='" +
+        body["@controls"]["nearby:events-by"].href +
+        "' onClick='followLink(event, this, renderAreas)'>Look for events</a>"
     );
     $(".resulttable thead").empty();
 	$(".resulttable thead").append(body.name);
     $(".resulttable tbody").empty();
     renderAreaForm(body["@controls"]["nearby:delete-area"]);
+	renderAreaCollectionForm(body["@controls"]["nearby:edit-area"]);
 }
 
 function renderAreas(body) {
