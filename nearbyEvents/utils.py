@@ -74,6 +74,13 @@ class NearbyEventsBuilder(MasonBuilder):
             method="DELETE",
             title="Delete this area"
         )
+    def add_control_delete_event(self, event):
+        self.add_control(
+            "nearby:delete-event",
+            url_for("api.eventitem", event=event),
+            method="DELETE",
+            title="Delete this event"
+        )
 
     def add_control_add_area(self):
         self.add_control(
@@ -100,8 +107,7 @@ class NearbyEventsBuilder(MasonBuilder):
             "nearby:events-by",
             url_for("api.eventsbyarea", area=area),
             method="GET",
-            title="Add a new event",
-            schema=Event.get_schema()
+            title="Add a new event"
         )
 
     def add_control_modify_area(self, area):
@@ -112,6 +118,16 @@ class NearbyEventsBuilder(MasonBuilder):
             encoding="json",
             title="Edit this area",
             schema=Area.get_schema()
+        )
+    
+    def add_control_modify_event(self, event):
+        self.add_control(
+            "nearby:edit-event",
+            url_for("api.eventitem", event=event),
+            method="PUT",
+            encoding="json",
+            title="Edit this event",
+            schema=Event.get_schema()
         )
 
     def add_control_get_areas(self, area):

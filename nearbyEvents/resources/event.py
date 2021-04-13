@@ -24,6 +24,9 @@ class EventItem(Resource):
         body.add_control("self", url_for("api.eventitem", event=event))
         body.add_control("profile", EVENT_PROFILE)
         body.add_control("collection", url_for("api.eventcollection"))
+        body.add_control_delete_event(db_event.name)
+        body.add_control_modify_event(db_event.name)
+        body.add_control_events_by(db_event.area_name)
         #body.add_control_delete_event(event)
         # body.add_control("nearby:events-collection",
             # url_for("api.eventcollection")

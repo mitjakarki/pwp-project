@@ -47,7 +47,6 @@ class Event(db.Model):
             "description": "Event's unique name",
             "type": "string"
         }
-        props = schema["properties"] = {}
         props["status"] = {
             "description": "Event's status",
             "type": "string"
