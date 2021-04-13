@@ -30,6 +30,49 @@ class AreaItem(Resource):
         # )
         
         return Response(json.dumps(body), 200, mimetype=MASON)
+        
+    def put(self, area):
+        db_area = Area.query.filter_by(name=area).first()
+        if db_area is None:
+            return create_error_response(404, "Not found", 
+                "No area was found with the name {}".format(area)
+            )
+        
+        if not request.json:
+            return create_error_response(415, "Unsupported media type",
+                "Requests must be JSON"
+            )
+
+        try:
+            validate(request.json, Area.get_schema())
+        except ValidationError as e:
+            db.session.rollback()
+            return create_error_response(400, "Invalid JSON document", str(e))
+    
+        db_area.name = request.json["name"]
+        
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return create_error_response(409, "Already exists", 
+                "Area with name '{}' already exists.".format(request.json["name"])
+            )
+        
+        return Response(status=204)
+
+    def delete(self, area):
+        db_area = Area.query.filter_by(name=area).first()
+        if db_area is None:
+            return create_error_response(404, "Not found", 
+                "No area was found with the name {}".format(area)
+            )
+        
+        db.session.delete(db_area)
+        db.session.commit()
+        
+        return Response(status=204)
+    
 
 
 class AreaCollection(Resource):
@@ -61,6 +104,7 @@ class AreaCollection(Resource):
         try:
             validate(request.json, Area.get_schema())
         except ValidationError as e:
+            db.session.rollback()
             return create_error_response(400, "Invalid JSON document", str(e))
 
         area = Area(
@@ -71,6 +115,7 @@ class AreaCollection(Resource):
             db.session.add(area)
             db.session.commit()
         except IntegrityError:
+            db.session.rollback()
             return create_error_response(
                 409, "Already exists",
                 "Area with name '{}' already exists.".format(request.json["name"])

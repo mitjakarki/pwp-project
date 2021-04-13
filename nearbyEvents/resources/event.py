@@ -46,6 +46,7 @@ class EventItem(Resource):
         try:
             validate(request.json, Event.get_schema())
         except ValidationError as e:
+            db.session.rollback()
             return create_error_response(400, "Invalid JSON document", str(e))
     
         db_event.name = request.json["name"]
@@ -56,6 +57,7 @@ class EventItem(Resource):
         try:
             db.session.commit()
         except IntegrityError:
+            db.session.rollback()
             return create_error_response(409, "Already exists", 
                 "Event with name '{}' already exists.".format(request.json["name"])
             )
@@ -66,7 +68,7 @@ class EventItem(Resource):
         db_event = Event.query.filter_by(name=event).first()
         if db_event is None:
             return create_error_response(404, "Not found", 
-                "No evemt was found with the name {}".format(event)
+                "No event was found with the name {}".format(event)
             )
         
         db.session.delete(db_event)
