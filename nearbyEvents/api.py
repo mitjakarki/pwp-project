@@ -12,7 +12,7 @@ api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(api_bp)
 
 api.add_resource(AreaCollection, "/areas/")
-api.add_resource(AreaItem, "/area/<area>/")
+api.add_resource(AreaItem, "/areas/<area>/")
 api.add_resource(EventCollection, "/events/")
 api.add_resource(EventItem, "/events/<event>/")
 #api.add_resource(LocationItem, "/locations/<location>/")

@@ -33,6 +33,16 @@ function sendData(href, method, item, postProcessor) {
     });
 }
 
+function deleteData(href, method, postProcessor) {
+    $.ajax({
+        url: href,
+        type: method,
+        processData: false,
+        success: postProcessor,
+        error: renderError
+    });
+}
+
 function areaRow(item) {
     let link = "<a href='" +
                 item["@controls"].self.href +
@@ -50,6 +60,13 @@ function measurementRow(item) {
 
 function appendAreaRow(body) {
     $(".resulttable tbody").append(areaRow(body));
+}
+
+function getDeletedArea(data, status, jqxhr) {
+    renderMsg("Deleted");
+	$(".resulttable thead").empty();
+	$(".resulttable tbody").empty();
+	$("div.tablecontrols").empty();
 }
 
 function getSubmittedArea(data, status, jqxhr) {
@@ -74,7 +91,7 @@ function submitArea(event) {
     sendData(form.attr("action"), form.attr("method"), data, getSubmittedArea);
 }
 
-function renderAreaForm(ctrl) {
+function renderAreaCollectionForm(ctrl) {
     let form = $("<form>");
     let name = ctrl.schema.properties.name;
     form.attr("action", ctrl.href);
@@ -89,26 +106,24 @@ function renderAreaForm(ctrl) {
     $("div.form").html(form);
 }
 
+function renderAreaForm(ctrl) {
+    let button = $("<button>");
+    let name = ctrl.title;
+	button.html("Delete");
+	button.attr("onClick", "deleteData('"+ctrl.href+"', '"+ctrl.method+"', getDeletedArea)")
+    $("div.form").html(button);
+}
+
 function renderArea(body) {
     $("div.navigation").html(
         "<a href='" +
         body["@controls"].collection.href +
         "' onClick='followLink(event, this, renderAreas)'>Areas</a>" 
-		// tähän varmaan sitten render events in the area
-		//+
-		//"<a href='" +
-        //body["@controls"]["nearby:areas-collection"].href +
-        //"' onClick='followLink(event, this, renderEVETNSBLABLABLA)'>collection</a>"
     );
     $(".resulttable thead").empty();
+	$(".resulttable thead").append(body.name);
     $(".resulttable tbody").empty();
-    renderAreaForm(body["@controls"].edit);
-    $("input[name='name']").val(body.name);
-    $("form input[type='submit']").before(
-        "<label>Location</label>" +
-        "<input type='text' name='name' value='" +
-        body.location + "' readonly>"
-    );
+    renderAreaForm(body["@controls"]["nearby:delete-area"]);
 }
 
 function renderAreas(body) {
@@ -122,7 +137,7 @@ function renderAreas(body) {
     body.items.forEach(function (item) {
         tbody.append(areaRow(item));
     });
-    renderAreaForm(body["@controls"]["nearby:add-area"]);
+    renderAreaCollectionForm(body["@controls"]["nearby:add-area"]);
 }
 
 function renderMeasurements(body) {

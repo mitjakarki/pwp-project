@@ -24,7 +24,7 @@ class AreaItem(Resource):
         body.add_control("self", url_for("api.areaitem", area=area))
         body.add_control("profile", AREA_PROFILE)
         body.add_control("collection", url_for("api.areacollection"))
-        body.add_control_delete_area(area)
+        body.add_control_delete_area(db_area.name)
         # body.add_control("nearby:areas-collection",
             # url_for("api.areacollection")
         # )

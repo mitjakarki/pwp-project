@@ -69,7 +69,7 @@ class NearbyEventsBuilder(MasonBuilder):
 
     def add_control_delete_area(self, area):
         self.add_control(
-            "nearby:delete",
+            "nearby:delete-area",
             url_for("api.areaitem", area=area),
             method="DELETE",
             title="Delete this area"
