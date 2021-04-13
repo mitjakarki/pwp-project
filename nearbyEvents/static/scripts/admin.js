@@ -1,5 +1,6 @@
 "use strict";
-
+// This admin.js is adapted from the example by https://lovelace.oulu.fi/ohjelmoitava-web/ohjelmoitava-web/
+// fit to our application
 const DEBUG = true;
 const MASONJSON = "application/vnd.mason+json";
 const PLAINJSON = "application/json";
@@ -50,12 +51,6 @@ function areaRow(item) {
 
     return "<tr><td>" + item.name +
             "</td><td>" + link + "</td></tr>";
-}
-
-function measurementRow(item) {
-    return "<tr><td>" + item.time +
-                "</td><td>" + item.value +
-                "</td></tr>";
 }
 
 function appendAreaRow(body) {
@@ -143,33 +138,6 @@ function renderAreas(body) {
         tbody.append(areaRow(item));
     });
     renderAreaCollectionForm(body["@controls"]["nearby:add-area"]);
-}
-
-function renderMeasurements(body) {
-	let prev_element = ""
-	let next_element = ""
-	$("div.navigation").empty();
-	if (body["@controls"].prev) {
-      prev_element = "<a href='" +
-					body["@controls"].prev.href +
-					"' onClick='followLink(event, this, renderMeasurements)'>prev</a>"
-    }
-	if (body["@controls"].next) {
-      next_element = "<a href='" +
-					body["@controls"].next.href +
-					"' onClick='followLink(event, this, renderMeasurements)'>next</a>"
-    }
-	$("div.tablecontrols").html(
-      prev_element + " | " + next_element
-    );
-	$(".resulttable thead").html(
-        "<tr><th>Time</th><th>Value</th></tr>"
-    );
-	let tbody = $(".resulttable tbody");
-    tbody.empty();
-	body.items.forEach(function (item) {
-        tbody.append(measurementRow(item));
-    });
 }
 
 $(document).ready(function () {

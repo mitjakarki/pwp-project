@@ -6,8 +6,6 @@ from nearbyEvents.resources.area import AreaCollection, AreaItem
 from nearbyEvents.resources.event import EventCollection, EventItem
 from nearbyEvents.resources.eventsbyarea import EventsByArea
 
-#from nearbyEvents.resources.location import LocationItem, LocationSensorPairing
-#from nearbyEvents.resources.measurement import MeasurementCollection
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 api = Api(api_bp)

@@ -10,6 +10,10 @@ from nearbyEvents.constants import *
 
 class AreaItem(Resource):
 
+    """
+        Retrieve single area based on the area name (string)
+    """
+
     def get(self, area):
         db_area = Area.query.filter_by(name=area).first()
         if db_area is None:
@@ -27,12 +31,12 @@ class AreaItem(Resource):
         body.add_control_delete_area(db_area.name)
         body.add_control_modify_area(db_area.name)
         body.add_control_events_by(db_area.name)
-        # body.add_control("nearby:areas-collection",
-            # url_for("api.areacollection")
-        # )
-        
         return Response(json.dumps(body), 200, mimetype=MASON)
         
+    """
+        Modify an area based on the area name (string)
+        Must be JSON and include the parameter: name
+    """
     def put(self, area):
         db_area = Area.query.filter_by(name=area).first()
         if db_area is None:
@@ -63,6 +67,9 @@ class AreaItem(Resource):
         
         return Response(status=204)
 
+    """
+        Delete single area based on the area name (string)
+    """
     def delete(self, area):
         db_area = Area.query.filter_by(name=area).first()
         if db_area is None:
@@ -79,6 +86,9 @@ class AreaItem(Resource):
 
 class AreaCollection(Resource):
 
+    """
+        Retrieve all areas in the system
+    """
     def get(self):
         body = NearbyEventsBuilder()
 
@@ -96,6 +106,10 @@ class AreaCollection(Resource):
 
         return Response(json.dumps(body), 200, mimetype=MASON)
         
+    """
+        Add a new area to the system
+        Must be JSON and uses name (string) as the parameter
+    """
     def post(self):
         if not request.json:
             return create_error_response(

@@ -10,6 +10,10 @@ from nearbyEvents.constants import *
 
 class EventItem(Resource):
 
+    """
+        Retrieve single event based on the event name (string)
+    """
+    
     def get(self, event):
         db_event = Event.query.filter_by(name=event).first()
         if db_event is None:
@@ -27,13 +31,13 @@ class EventItem(Resource):
         body.add_control_delete_event(db_event.name)
         body.add_control_modify_event(db_event.name)
         body.add_control_events_by(db_event.area_name)
-        #body.add_control_delete_event(event)
-        # body.add_control("nearby:events-collection",
-            # url_for("api.eventcollection")
-        # )
         
         return Response(json.dumps(body), 200, mimetype=MASON)
         
+    """
+        Modify an event based on the event name (string)
+        Must be JSON and include the parameter: name
+    """
     def put(self, event):
         db_event = Event.query.filter_by(name=event).first()
         if db_event is None:
@@ -66,7 +70,10 @@ class EventItem(Resource):
             )
         
         return Response(status=204)
-
+    
+    """
+        Delete single event based on the event name (string)
+    """
     def delete(self, event):
         db_event = Event.query.filter_by(name=event).first()
         if db_event is None:
@@ -82,6 +89,9 @@ class EventItem(Resource):
 
 class EventCollection(Resource):
 
+    """
+        Retrieve all events in the system
+    """
     def get(self):
         body = NearbyEventsBuilder()
 
@@ -99,6 +109,10 @@ class EventCollection(Resource):
 
         return Response(json.dumps(body), 200, mimetype=MASON)
         
+    """
+        Add a new event to the system
+        Must be JSON and uses name (string) as the parameter
+    """
     def post(self):
         if not request.json:
             return create_error_response(

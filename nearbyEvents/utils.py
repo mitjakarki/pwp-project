@@ -4,6 +4,7 @@ from nearbyEvents.constants import *
 from nearbyEvents.models import *
 
 # This code is based on the PWP course example of University of Oulu
+# https://lovelace.oulu.fi/ohjelmoitava-web/ohjelmoitava-web/
 
 class MasonBuilder(dict):
     """
@@ -65,6 +66,7 @@ class MasonBuilder(dict):
         self["@controls"][ctrl_name]["href"] = href
 
 
+# These controls are adapted from the example by https://lovelace.oulu.fi/ohjelmoitava-web/ohjelmoitava-web/
 class NearbyEventsBuilder(MasonBuilder):
 
     def add_control_delete_area(self, area):

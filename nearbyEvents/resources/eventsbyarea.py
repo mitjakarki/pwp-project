@@ -10,6 +10,9 @@ from nearbyEvents.constants import *
 
 class EventsByArea(Resource):
 
+    """
+        Retrieve events that are in a given area. Requires area name (string)
+    """
     def get(self, area):
         db_eventsbyarea = Event.query.filter(Event.area_name == area).all()
         if db_eventsbyarea is None:
@@ -30,14 +33,5 @@ class EventsByArea(Resource):
             item.add_control("self", url_for("api.eventitem", event=db_event.name))
             item.add_control("profile", AREA_PROFILE)
             body["items"].append(item)
-        # body.add_namespace("nearby", LINK_RELATIONS_URL)
-        # body.add_control("self", url_for("api.eventsby", area=area))
-        # body.add_control("profile", AREA_PROFILE)
-        #body.add_control("collection", url_for("api.areacollection"))
-        #body.add_control_delete_area(db_area.name)
-        #body.add_control_modify_area(db_area.name)
-        # body.add_control("nearby:areas-collection",
-            # url_for("api.areacollection")
-        # )
         
         return Response(json.dumps(body), 200, mimetype=MASON)
