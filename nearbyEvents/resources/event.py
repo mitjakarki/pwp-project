@@ -3,7 +3,7 @@ from jsonschema import validate, ValidationError
 from flask import request, Response, url_for
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from nearbyEvents.models import Area
+from nearbyEvents.models import Area, Event
 from nearbyEvents import db
 from nearbyEvents.utils import NearbyEventsBuilder, create_error_response
 from nearbyEvents.constants import *
@@ -30,7 +30,50 @@ class EventItem(Resource):
         # )
         
         return Response(json.dumps(body), 200, mimetype=MASON)
+        
+    def put(self, event):
+        db_event = Event.query.filter_by(name=event).first()
+        if db_event is None:
+            return create_error_response(404, "Not found", 
+                "No event was found with the name {}".format(event)
+            )
+        
+        if not request.json:
+            return create_error_response(415, "Unsupported media type",
+                "Requests must be JSON"
+            )
 
+        try:
+            validate(request.json, Event.get_schema())
+        except ValidationError as e:
+            return create_error_response(400, "Invalid JSON document", str(e))
+    
+        db_event.name = request.json["name"]
+        db_event.status = request.json["status"]
+        db_event.event_begin = request.json["event_begin"]
+        db_event.area_name = request.json["area_name"]
+        
+        try:
+            db.session.commit()
+        except IntegrityError:
+            return create_error_response(409, "Already exists", 
+                "Event with name '{}' already exists.".format(request.json["name"])
+            )
+        
+        return Response(status=204)
+
+    def delete(self, event):
+        db_event = Event.query.filter_by(name=event).first()
+        if db_event is None:
+            return create_error_response(404, "Not found", 
+                "No evemt was found with the name {}".format(event)
+            )
+        
+        db.session.delete(db_event)
+        db.session.commit()
+        
+        return Response(status=204)
+    
 
 class EventCollection(Resource):
 
@@ -64,7 +107,7 @@ class EventCollection(Resource):
             return create_error_response(400, "Invalid JSON document", str(e))
 
         event = Event(
-            name=request.json["name"]
+            name=request.json["name"],
             status=request.json["status"],
             event_begin=request.json["event_begin"],
             area_name=request.json["area_name"]
