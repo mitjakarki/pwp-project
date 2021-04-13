@@ -1,3 +1,6 @@
 nearbyEvents/__pycache__/
 nearbyEvents/resources/__pycache__/
 instance/
+tests/__pycache__/*
+.coverage
+tests/__pycache__/test_database.cpython-37-pytest-5.4.2.pyc

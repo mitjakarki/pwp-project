@@ -28,7 +28,7 @@ class Event(db.Model):
     max_tickets = db.Column(db.Integer, nullable=False)
     ticket_price = db.Column(db.Float, nullable=True)
     status = db.Column(db.String(16), nullable=False)
-    event_begin = db.Column(db.DateTime, nullable=False)
+    event_begin = db.Column(db.String(64), nullable=True)
     event_manager = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="SET NULL", onupdate="CASCADE"), nullable=True)
     area_name = db.Column(db.String(64), db.ForeignKey("area.name", ondelete="SET NULL", onupdate="CASCADE"), nullable=True)
     
@@ -53,8 +53,7 @@ class Event(db.Model):
         }
         props["event_begin"] = {
             "description": "Date for the happening",
-            "type": "string",
-            "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-5][0-9]:[0-5][0-9]Z$"
+            "type": "string"
         }
         props["area_name"] = {
             "description": "Name of the area",
