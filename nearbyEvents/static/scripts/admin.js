@@ -115,7 +115,7 @@ function renderAreas(body) {
     $("div.navigation").empty();
     $("div.tablecontrols").empty();
     $(".resulttable thead").html(
-        "<tr><th>Name</th><th>Model</th><th>Location</th><th>Actions</th></tr>"
+        "<tr><th>Name</th><th>Actions</th></tr>"
     );
     let tbody = $(".resulttable tbody");
     tbody.empty();
