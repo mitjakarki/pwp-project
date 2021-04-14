@@ -22,16 +22,18 @@ class EventsByArea(Resource):
         body = NearbyEventsBuilder()
 
         body.add_namespace("nearby", LINK_RELATIONS_URL)
-        body.add_control("self", url_for("api.areacollection"))
-        body.add_control_add_area()
-        body["items"] = []
+        body.add_control("self", url_for("api.eventsbyarea", area=area))
+        body.add_control_get_areas()
+        body["items"]=[]
         
         for db_event in db_eventsbyarea:
+            #body.add_control_get_event(db_event.name)
             item = NearbyEventsBuilder(
                 name=db_event.name
             )
             item.add_control("self", url_for("api.eventitem", event=db_event.name))
             item.add_control("profile", AREA_PROFILE)
+            item.add_control_get_area(db_event.area_name)
             body["items"].append(item)
         
         return Response(json.dumps(body), 200, mimetype=MASON)

@@ -30,7 +30,7 @@ class EventItem(Resource):
         body.add_control("collection", url_for("api.eventcollection"))
         body.add_control_delete_event(db_event.name)
         body.add_control_modify_event(db_event.name)
-        body.add_control_events_by(db_event.area_name)
+        body.add_control_get_area(db_event.area_name)
         
         return Response(json.dumps(body), 200, mimetype=MASON)
         
@@ -105,6 +105,7 @@ class EventCollection(Resource):
             )
             item.add_control("self", url_for("api.eventitem", event=db_event.name))
             item.add_control("profile", EVENT_PROFILE)
+            item.add_control_get_area(db_event.area_name)
             body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)

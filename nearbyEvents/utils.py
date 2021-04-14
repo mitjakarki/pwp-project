@@ -93,6 +93,14 @@ class NearbyEventsBuilder(MasonBuilder):
             title="Add a new area",
             schema=Area.get_schema()
         )
+        
+    def add_control_get_area(self, area):
+        self.add_control(
+            "nearby:area",
+            url_for("api.areaitem", area=area),
+            method="GET",
+            title="Add a new event"
+        )
 
     def add_control_add_event(self):
         self.add_control(
@@ -132,14 +140,18 @@ class NearbyEventsBuilder(MasonBuilder):
             schema=Event.get_schema()
         )
 
-    def add_control_get_areas(self, area):
-        base_uri = url_for("api.areacollection", area=area)
-        uri = base_uri + "?start={index}"
+    def add_control_get_event(self, event):
+        self.add_control(
+            "items",
+            url_for("api.eventitem", event=event),
+            method="GET",
+            title="Get this event"
+        )
+
+    def add_control_get_areas(self):
         self.add_control(
             "nearby:areas-collection",
-            uri,
-            isHrefTemplate=True,
-            schema=self._paginator_schema()
+            url_for("api.areacollection")
         )
 
     @staticmethod
