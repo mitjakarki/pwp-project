@@ -29,8 +29,8 @@ def create_app(test_config=None):
     
     from . import models
     from . import api
-    app.cli.add_command(models.initializeDatabase)
-    app.cli.add_command(models.generateTestDatabase)
+    #app.cli.add_command(models.initializeDatabase)
+    #app.cli.add_command(models.generateTestDatabase)
     app.register_blueprint(api.api_bp)
     
     @app.route(LINK_RELATIONS_URL)
@@ -40,10 +40,6 @@ def create_app(test_config=None):
     @app.route("/profiles/<profile>/")
     def send_profile(profile):
         return "you requests {} profile".format(profile)
-        
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
         
     @app.route("/admin/")
     def admin_site():

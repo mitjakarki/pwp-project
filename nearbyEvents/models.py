@@ -110,49 +110,49 @@ class Ticket(db.Model):
     in_reservation = db.relationship("Reservation", back_populates="tickets")
     
     
-@click.command("initializeDatabase")
-@with_appcontext
-def initializeDatabase():
-    db.create_all()
+# @click.command("initializeDatabase")
+# @with_appcontext
+# def initializeDatabase():
+    # db.create_all()
 
-@click.command("generateTestDatabase")
-@with_appcontext
-def generateTestDatabase():
-    user = User(
-        first_name="user",
-        last_name="test",
-        birth_date=datetime.datetime.now(),
-        email="user.test@gmail.com"
-        )
-    country = Country(
-        country="Finland",
-        currency="EUR"
-        )  
-    area = Area(
-        name="Oulu - Keskusta"
-    )
-    event = Event(
-        name="Stand Up Comedy at 45 Special",
-        max_tickets=150,
-        ticket_price=19,
-        status="Cancelled",
-        event_begin=datetime.datetime.now() + datetime.timedelta(days = 1)
-    )
-    reservation = Reservation(
-        paid=True,
-        created_at=datetime.datetime.now()
-    )
-    ticket = Ticket(
-        type="VIP"
-    )
-    # Create relations
-    area.in_country = country
-    event.in_area = area
-    event.is_managed_by = user
-    reservation.for_event = event
-    reservation.user_booked = user
-    ticket.in_reservation = reservation
+# @click.command("generateTestDatabase")
+# @with_appcontext
+# def generateTestDatabase():
+    # user = User(
+        # first_name="user",
+        # last_name="test",
+        # birth_date=datetime.datetime.now(),
+        # email="user.test@gmail.com"
+        # )
+    # country = Country(
+        # country="Finland",
+        # currency="EUR"
+        # )  
+    # area = Area(
+        # name="Oulu - Keskusta"
+    # )
+    # event = Event(
+        # name="Stand Up Comedy at 45 Special",
+        # max_tickets=150,
+        # ticket_price=19,
+        # status="Cancelled",
+        # event_begin=datetime.datetime.now() + datetime.timedelta(days = 1)
+    # )
+    # reservation = Reservation(
+        # paid=True,
+        # created_at=datetime.datetime.now()
+    # )
+    # ticket = Ticket(
+        # type="VIP"
+    # )
+    # # Create relations
+    # area.in_country = country
+    # event.in_area = area
+    # event.is_managed_by = user
+    # reservation.for_event = event
+    # reservation.user_booked = user
+    # ticket.in_reservation = reservation
     
-    # Populate database with test data
-    db.session.add(ticket)
-    db.session.commit()
+    # # Populate database with test data
+    # db.session.add(ticket)
+    # db.session.commit()

@@ -167,15 +167,35 @@ class TestAreaItem(object):
     RESOURCE_URL = "/api/areas/test-area-1/"
     INVALID_URL = "/api/areas/non-area-x/"
 
+    def test_get(self, client):
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        resp = client.get(self.INVALID_URL)
+        assert resp.status_code == 404
+        _check_control_get_method("collection", client, body)
+
     def test_put_wrong_mediatype(self, client):
         valid = _get_area_json()
         resp = client.put(self.RESOURCE_URL, data=json.dumps(valid))
         assert resp.status_code == 415
         
+    def test_put_valid_invalid_json(self, client):
+        valid = _get_area_json()
+        valid["wrong"] = valid.pop("name")
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 400
+       
     def test_put_missing(self, client):
         valid = _get_area_json()
         resp = client.put(self.INVALID_URL, json=valid)
         assert resp.status_code == 404
+        
+    def test_put_valid_request_duplicate(self, client):
+        valid = _get_area_json()
+        valid["name"] = "test-area-2"
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 409
         
     def test_put_valid(self, client):
         valid = _get_area_json()
@@ -192,7 +212,17 @@ class TestAreaItem(object):
     def test_delete_missing(self, client):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
+    
+class TestGeneric(object):    
+    RESOURCE_URL = "/admin/"
+    PROFILE_URL = "/profiles/link-relations/"
+    def test_get_profile_link_relations(self, client):
+        resp = client.get(self.PROFILE_URL)
+        assert resp.status_code == 200
         
+    def test_get_admin_page(self, client):
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
         
 class TestEventCollection(object):
 
@@ -261,11 +291,24 @@ class TestEventItem(object):
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
         
-    def test_put_invalid(self, client):
+    def test_put_valid_request_duplicate(self, client):
+        valid = _get_event_json()
+        valid["name"] = "test-event-2"
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 409
+        
+    def test_put_invalid_request(self, client):
         valid = _get_event_json()
         valid.pop("event_begin")
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
+        
+    def test_put_invalid_missing(self, client):
+        resp = client.delete(self.RESOURCE_URL)
+        assert resp.status_code == 204
+        valid = _get_event_json()
+        resp = client.put(self.RESOURCE_URL, json=valid)
+        assert resp.status_code == 404
         
     def test_delete_valid(self, client):
         resp = client.delete(self.RESOURCE_URL)
