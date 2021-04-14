@@ -124,18 +124,21 @@ class EventCollection(Resource):
             validate(request.json, Event.get_schema())
         except ValidationError as e:
             return create_error_response(400, "Invalid JSON document", str(e))
-
+        
+        db_area = Area.query.filter_by(name=request.json["area_name"]).first()
         event = Event(
             name=request.json["name"],
+            max_tickets=request.json["max_tickets"],
+            ticket_price=request.json["ticket_price"],
             status=request.json["status"],
-            event_begin=request.json["event_begin"],
-            area_name=request.json["area_name"]
+            event_begin=request.json["event_begin"]
         )
-
+        event.in_area=db_area
         try:
             db.session.add(event)
             db.session.commit()
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e)
             return create_error_response(
                 409, "Already exists",
                 "Event with name '{}' already exists.".format(request.json["name"])

@@ -18,6 +18,7 @@ from nearbyEvents import app, db
 from nearbyEvents.models import User, Event, Area, Country, Reservation, Ticket
 
 # based on http://flask.pocoo.org/docs/1.0/testing/
+# adapted from the Exercise in lovelace
 @pytest.fixture
 def client():
     db_fd, db_fname = tempfile.mkstemp()
@@ -196,6 +197,7 @@ class TestAreaItem(object):
 class TestEventCollection(object):
 
     RESOURCE_URL = "/api/events/"
+    RESOURCE_URL_AREA = "/api/areas/"
 
     def test_get(self, client):
         resp = client.get(self.RESOURCE_URL)
@@ -208,7 +210,11 @@ class TestEventCollection(object):
         _check_control_get_method("self", client, body)
                
     def test_post_valid_request(self, client):
+        valid_area = _get_area_json()
+        resp = client.post(self.RESOURCE_URL_AREA, json=valid_area)
+        assert resp.status_code == 201
         valid = _get_event_json()
+        valid["area_name"]=valid_area["name"]
         resp = client.post(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 201
         assert resp.headers["Location"].endswith(self.RESOURCE_URL + valid["name"] + "/")
@@ -255,9 +261,9 @@ class TestEventItem(object):
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 204
         
+    def test_put_invalid(self, client):
         valid = _get_event_json()
-    # remove field for 400
-        valid.pop("area_name")
+        valid.pop("event_begin")
         resp = client.put(self.RESOURCE_URL, json=valid)
         assert resp.status_code == 400
         
@@ -270,3 +276,18 @@ class TestEventItem(object):
     def test_delete_missing(self, client):
         resp = client.delete(self.INVALID_URL)
         assert resp.status_code == 404
+        
+class TestEventByArea(object):
+
+    RESOURCE_URL = "/api/areas/test-area-1/events/"
+
+    def test_get(self, client):
+        resp = client.get(self.RESOURCE_URL)
+        assert resp.status_code == 200
+        body = json.loads(resp.data)
+        assert len(body["items"]) == 1
+        for item in body["items"]:
+            assert "name" in item
+            _check_control_get_method("self", client, item)
+        _check_control_get_method("self", client, body)
+               
