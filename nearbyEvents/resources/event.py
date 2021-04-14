@@ -105,7 +105,8 @@ class EventCollection(Resource):
             )
             item.add_control("self", url_for("api.eventitem", event=db_event.name))
             item.add_control("profile", EVENT_PROFILE)
-            item.add_control_get_area(db_event.area_name)
+            if (db_event.area_name != None):
+                item.add_control_get_area(db_event.area_name)
             body["items"].append(item)
 
         return Response(json.dumps(body), 200, mimetype=MASON)

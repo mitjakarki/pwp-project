@@ -57,10 +57,12 @@ function eventRow(item) {
     let link = "<a href='" +
                 item["@controls"].self.href +
                 "' onClick='followLink(event, this, renderEvent)'>show</a>" +
-				" | <a href='" +
-                item["@controls"]["nearby:area"].href +
+				" | <a href='";
+	if (typeof item["@controls"]["nearby:area"] !== 'undefined') {
+		link = link+item["@controls"]["nearby:area"].href +
                 "' onClick='followLink(event, this, renderArea)'>area</a>"
 				;
+	}
 
     return "<tr><td>" + item.name +
             "</td><td>" + link + "</td></tr>";
@@ -247,6 +249,11 @@ function renderEvents(body) {
 function renderEventsByArea(body) {
     $("div.navigation").empty();
     $("div.tablecontrols").empty();
+	$("div.navigation").html(
+        "<a href='" +
+        body["@controls"]["nearby:areas-collection"].href +
+        "' onClick='followLink(event, this, renderAreas)'>Areas</a>"
+    );
     $(".resulttable thead").html(
         "<tr><th>Name</th><th>Actions</th></tr>"
     );
