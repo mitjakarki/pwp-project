@@ -31,9 +31,10 @@ After this a sql dump is found under the instance folder. The database used in t
 The project includes test functions for the database in the tests folder. This is run using 
     pytest.
 
-You can run the tests by just using the command:
+You can run the tests by just using one of the commands here (the second enables coverage reporting):
 
     pytest
+    pytest --cov-report term-missing --cov=nearbyEvents
 
 # Group information
 * Student 1. Mitja Kärki mitja.karki ät hotmail dot com
