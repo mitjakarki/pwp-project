@@ -29,10 +29,11 @@ class EventsByArea(Resource):
         for db_event in db_eventsbyarea:
             #body.add_control_get_event(db_event.name)
             item = NearbyEventsBuilder(
-                name=db_event.name
+                name=db_event.name,
+                area_name=db_event.area_name
             )
             item.add_control("self", url_for("api.eventitem", event=db_event.name))
-            item.add_control("profile", AREA_PROFILE)
+            item.add_control("profile", EVENT_PROFILE)
             item.add_control_get_area(db_event.area_name)
             body["items"].append(item)
         

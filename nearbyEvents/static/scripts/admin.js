@@ -68,12 +68,33 @@ function eventRow(item) {
             "</td><td>" + link + "</td></tr>";
 }
 
+function eventAreaRow(item) {
+    let link = "<a href='" +
+                item["@controls"].self.href +
+                "' onClick='followLink(event, this, renderEvent)'>show event</a>" +
+				" | <a href='";
+	//if (typeof item["@controls"]["nearby:area"] !== 'undefined') {
+	//	link = link+item["@controls"]["nearby:area"].href +
+    //            "' onClick='followLink(event, this, renderArea)'>show area</a>"
+	//			;
+	//}
+
+    return "<tr><td>" + item.name + " in area: " + "<a href='" +
+                item["@controls"]["nearby:area"].href +
+                "' onClick='followLink(event, this, renderArea)'>" + item.area_name + "</a>" +
+            "</td><td>" + link + "</td></tr>";
+}
+
 function appendAreaRow(body) {
     $(".resulttable tbody").append(areaRow(body));
 }
 
 function appendEventRow(body) {
     $(".resulttable tbody").append(eventRow(body));
+}
+
+function appendEvenAreatRow(body) {
+    $(".resulttable tbody").append(eventAreaRow(body));
 }
 
 function getDeletedArea(data, status, jqxhr) {
@@ -249,18 +270,19 @@ function renderEvents(body) {
 function renderEventsByArea(body) {
     $("div.navigation").empty();
     $("div.tablecontrols").empty();
+	$("div.form").empty();
 	$("div.navigation").html(
         "<a href='" +
         body["@controls"]["nearby:areas-collection"].href +
         "' onClick='followLink(event, this, renderAreas)'>Areas</a>"
     );
     $(".resulttable thead").html(
-        "<tr><th>Name</th><th>Actions</th></tr>"
+        "<tr><th>Event Name</th><th>Actions</th></tr>"
     );
     let tbody = $(".resulttable tbody");
     tbody.empty();
     body.items.forEach(function (item) {
-        tbody.append(eventRow(item));
+        tbody.append(eventAreaRow(item));
     });
 }
 
