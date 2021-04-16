@@ -27,6 +27,8 @@ After this a sql dump is found under the instance folder. The database used in t
 # Running the API and Client
     flask run
 
+## After this you can access the client to use the API from:
+    http://localhost:5000/admin/
 # Database & API testing
 The project includes test functions for the database in the tests folder. This is run using 
     pytest.
