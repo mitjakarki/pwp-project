@@ -45,8 +45,8 @@
 #### remove add-area and edit from eventbyarea apiary to area collection and area.  DONE
 
 #### REST CONFORMANCE: DONE
-#### develop further the uniform interface part
-#### also connectedness explain more on HATEOAS, for example how we use hypermedia.
+#### develop further the uniform interface part DONE
+#### also connectedness explain more on HATEOAS, for example how we use hypermedia. DONE
 
 
 
