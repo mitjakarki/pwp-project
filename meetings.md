@@ -61,11 +61,11 @@
 *Summary of what was discussed during the meeting*
 
 ### Action points
-1. Do course feedback at palaute.oulu.fi
+1. Do course feedback at palaute.oulu.fi DONE
 2. Add details to futurework
 3. Mention in earlier deadlines what features we left out from Design->implementation
 4. Update hours
-5. Fix bug in client
+5. Fix bug in client DONE
 
 
 ### Comments from staff
