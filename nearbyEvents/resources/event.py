@@ -30,7 +30,8 @@ class EventItem(Resource):
         body.add_control("collection", url_for("api.eventcollection"))
         body.add_control_delete_event(db_event.name)
         body.add_control_modify_event(db_event.name)
-        body.add_control_get_area(db_event.area_name)
+        if db_event.area_name is not None:
+            body.add_control_get_area(db_event.area_name)
         
         return Response(json.dumps(body), 200, mimetype=MASON)
         

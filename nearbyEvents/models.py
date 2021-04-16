@@ -30,7 +30,7 @@ class Event(db.Model):
     status = db.Column(db.String(16), nullable=False)
     event_begin = db.Column(db.String(64), nullable=True)
     event_manager = db.Column(db.Integer, db.ForeignKey("user.id", ondelete="SET NULL", onupdate="CASCADE"), nullable=True)
-    area_name = db.Column(db.String(64), db.ForeignKey("area.name", ondelete="CASCADE", onupdate="CASCADE"), nullable=True)
+    area_name = db.Column(db.String(64), db.ForeignKey("area.name", ondelete="SET NULL", onupdate="CASCADE"), nullable=True)
     
     reservations =  db.relationship("Reservation", back_populates="for_event", cascade="all, delete-orphan")
     is_managed_by = db.relationship("User", back_populates="managed_events", foreign_keys=[event_manager])
