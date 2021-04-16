@@ -155,7 +155,7 @@ class NearbyEventsBuilder(MasonBuilder):
         )
 
     @staticmethod
-    def _paginator_schema():
+    def _paginator_schema():# pragma: no cover
         schema = {
             "type": "object",
             "properties": {},

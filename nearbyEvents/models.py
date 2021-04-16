@@ -112,12 +112,12 @@ class Ticket(db.Model):
     
 @click.command("initializeDatabase")
 @with_appcontext
-def initializeDatabase():
+def initializeDatabase():# pragma: no cover
     db.create_all()
 
 @click.command("generateTestDatabase")
 @with_appcontext
-def generateTestDatabase():
+def generateTestDatabase():# pragma: no cover
     user = User(
         first_name="user",
         last_name="test",
