@@ -13,7 +13,7 @@ You must set the correct environment variables before running:
     set FLASK_ENV=development
 
 With linux change "set" to "export"
-# How to initialize and populate test data to database
+# How to initialize and populate test data to database (This must be done before first usage of the application)
 When running first time, the database must be initialized with:
 
     flask initializeDatabase
