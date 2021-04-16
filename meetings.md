@@ -53,7 +53,7 @@
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
-## Meeting 3.
+## Meeting 3. (=FINAL MEETING because final deliverable)
 * **DATE:**
 * **ASSISTANTS:**
 
@@ -71,7 +71,7 @@
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
-## Meeting 4.
+~~## Meeting 4.
 * **DATE:**
 * **ASSISTANTS:**
 
@@ -111,5 +111,5 @@
 
 
 ### Comments from staff
-*ONLY USED BY COURSE STAFF: Additional comments from the course staff*
+*ONLY USED BY COURSE STAFF: Additional comments from the course staff*~~
 
