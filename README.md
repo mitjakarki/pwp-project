@@ -24,7 +24,10 @@ It is possible to populate the database with test data:
     
 After this a sql dump is found under the instance folder. The database used in testing is temporary.
 
-# Database testing
+# Running the API and Client
+    flask run
+
+# Database & API testing
 The project includes test functions for the database in the tests folder. This is run using 
     pytest.
 
