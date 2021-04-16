@@ -121,6 +121,11 @@ def _check_namespace(client, response):
 
 class TestAreaCollection(object):
 
+    """
+    Tests the AreaCollection resource. We that we can retrieve the collection and posting a new event with different
+    return codes: 201,200,415,400,409
+    """
+
     RESOURCE_URL = "/api/areas/"
 
     def test_get(self, client):
@@ -163,6 +168,13 @@ class TestAreaCollection(object):
         assert resp.status_code == 409
         
 class TestAreaItem(object):
+
+    """
+    Tests the AreaItem resource. We check different modify situations, successful and invalid requests.
+    Included are: 415,404,204,409,400,204.
+    Also Deleting an event includes:
+    204 and 404
+    """
 
     RESOURCE_URL = "/api/areas/test-area-1/"
     INVALID_URL = "/api/areas/non-area-x/"
@@ -214,6 +226,9 @@ class TestAreaItem(object):
         assert resp.status_code == 404
     
 class TestGeneric(object):    
+    """
+    Generic test that tests the entry point and profiles/link-relations/ 
+    """
     RESOURCE_URL = "/admin/"
     PROFILE_URL = "/profiles/link-relations/"
     def test_get_profile_link_relations(self, client):
@@ -225,6 +240,11 @@ class TestGeneric(object):
         assert resp.status_code == 200
         
 class TestEventCollection(object):
+
+    """
+    Tests the EventCollection resource. We that we can retrieve the collection and posting a new event with different
+    return codes: 201,200,415,400,409
+    """
 
     RESOURCE_URL = "/api/events/"
     RESOURCE_URL_AREA = "/api/areas/"
@@ -271,6 +291,13 @@ class TestEventCollection(object):
         assert resp.status_code == 409
         
 class TestEventItem(object):
+
+    """
+    Tests the EventItem resource. We check different modify situations, successful and invalid requests.
+    Included are: 415,404,204,409,400,204.
+    Also Deleting an event includes:
+    204 and 404
+    """
 
     RESOURCE_URL = "/api/events/test-event-1/"
     INVALID_URL = "/api/event/non-event-x/"
@@ -321,6 +348,10 @@ class TestEventItem(object):
         assert resp.status_code == 404
         
 class TestEventByArea(object):
+
+    """
+    Tests that we can retrieve the list of event in a certain area.
+    """
 
     RESOURCE_URL = "/api/areas/test-area-1/events/"
 
